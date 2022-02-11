@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "452981869731",
+    "project_id": "loyalty-wallet-a58e9",
+    "storage_bucket": "loyalty-wallet-a58e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452981869731:android:1eaf7ca66062f2da714316",
+        "android_client_info": {
+          "package_name": "com.loyalty_wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452981869731-o78o36hlm6bvh650qnaaemp4vg771n6f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loyalty_wallet",
+            "certificate_hash": "7c94aa566c049615117ac2ea645336ad9a07248a"
+          }
+        },
+        {
+          "client_id": "452981869731-vl3apr95qr38e69f397np9brk02jdqsp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZg_VSc4Ge9YbI9a2K2g0LgwTb5EEHu6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452981869731-vl3apr95qr38e69f397np9brk02jdqsp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
