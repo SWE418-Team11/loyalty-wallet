@@ -131,11 +131,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         Navigator.pushReplacementNamed(
                             context, BusinessOwnerMainScreen.id);
                       } else {
-                        Navigator.pushReplacementNamed(
+                        Navigator.pushReplacement(
                             context,
-                            user.businessOwner
-                                ? BusinessOwnerMainScreen.id
-                                : CustomerMainScreen.id);
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CustomerMainScreen(user: user)));
                       }
                     }
                   }

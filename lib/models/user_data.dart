@@ -70,4 +70,7 @@ class UserData with ChangeNotifier {
   bool get band => _isBand;
 
   bool get businessOwner => _isBusinessOwner;
+
+  String get lastName => _lastName;
+  String get firstName => _firstName;
 }

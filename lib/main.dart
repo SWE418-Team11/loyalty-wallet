@@ -28,7 +28,6 @@ class LoyaltyWallet extends StatelessWidget {
       routes: {
         StartScreen.id: (context) => const StartScreen(),
         CreateAccountScreen.id: (context) => const CreateAccountScreen(),
-        CustomerMainScreen.id: (context) => const CustomerMainScreen(),
         BusinessOwnerMainScreen.id: (context) =>
             const BusinessOwnerMainScreen(),
       },
