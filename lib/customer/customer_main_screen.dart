@@ -4,7 +4,9 @@ import 'package:loyalty_wallet/screens/explore.dart';
 import 'package:loyalty_wallet/screens/profile.dart';
 import 'package:loyalty_wallet/screens/wallet.dart';
 
+import '../business_owner/computation_points_screen.dart';
 import '../models/user_data.dart';
+import '../screens/branches_screen.dart';
 
 class CustomerMainScreen extends StatefulWidget {
   const CustomerMainScreen({required this.user, Key? key}) : super(key: key);
@@ -16,12 +18,15 @@ class CustomerMainScreen extends StatefulWidget {
 }
 
 class _CustomerMainScreenState extends State<CustomerMainScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 0; // index of current selected screen
+  bool isPressed = false; //to show the delete button on the cards
   @override
   Widget build(BuildContext context) {
     //Todo: take it out so it doesnt consume data
     List<Widget> _pages = <Widget>[
-      WalletScreen(),
+      WalletScreen(
+        isPressed: isPressed,
+      ),
       ExploreScreen(),
       ProfileScreen(user: widget.user),
     ];
@@ -36,6 +41,21 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                   ? 'Explore'
                   : 'Profile'),
           centerTitle: true,
+          actions: [
+            _selectedIndex == 0
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        (isPressed == false)
+                            ? isPressed = true
+                            : isPressed = false;
+                      });
+                    },
+                    icon: const Icon(Icons.delete),
+                    color: (isPressed == false) ? Colors.white : Colors.red,
+                  )
+                : const SizedBox(),
+          ],
         ),
         body: _pages.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(

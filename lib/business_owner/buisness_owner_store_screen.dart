@@ -15,7 +15,7 @@ class _BusinessOwnerStoreScreenState extends State<BusinessOwnerStoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          future: CloudDatabase.getStore(),
+          future: CloudDatabase.getOwnerStores(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Scaffold(

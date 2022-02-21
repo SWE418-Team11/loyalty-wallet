@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loyalty_wallet/business_owner/add_branch_screen.dart';
+import 'package:loyalty_wallet/business_owner/computation_points_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/customer/report_to_admin.dart';
 import 'package:loyalty_wallet/models/cloud_batabase.dart';
@@ -10,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../models/menu.dart';
 import '../models/store.dart';
+import '../screens/branches_screen.dart';
 
 class CustomerStoreScreen extends StatefulWidget {
   const CustomerStoreScreen({Key? key, required this.store}) : super(key: key);
@@ -33,7 +36,8 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
     String snapchat = store.socialMedia['snapchat']; // snapchat Account ID
     String twitter = store.socialMedia['twitter']; // twitter Account ID
     String facebook = store.socialMedia['facebook']; // facebook Account ID
-    String googleMaps = store.locations[1]; // Store Location using Google Maps
+    List<dynamic> locations =
+        store.locations; // Store Location using Google Maps
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenSpace = screenWidth * screenHeight;
@@ -101,8 +105,17 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                     children: [
                       IconButton(
                           onPressed: () async {
-                            await launch(googleMaps,
-                                forceSafariVC: true, forceWebView: true);
+                            //Todo: add branches screen here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BranchesScreen(
+                                  locations: locations,
+                                ),
+                              ),
+                            );
+                            // await launch(googleMaps,
+                            //     forceSafariVC: true, forceWebView: true);
                           },
                           icon: const Icon(
                             Icons.location_on,
@@ -116,8 +129,20 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                           icon: const Icon(Icons.notifications_active,
                               color: kMainColor, size: 30)),
                       IconButton(
-                          onPressed: () {
-                            //Todo: Add card
+                          onPressed: () async {
+                            await CloudDatabase.addCard({
+                              'cardType': 'points',
+                              'storeID': store.id,
+                              'storeName': storeName,
+                              'total': 0,
+                              'transactions': []
+                            }).whenComplete(() {
+                              const ScaffoldMessenger(
+                                child: SnackBar(
+                                  content: Text('Card Has been Added'),
+                                ),
+                              );
+                            });
                           },
                           icon: const Icon(Icons.card_membership_rounded,
                               color: kMainColor, size: 30)),
@@ -136,7 +161,63 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                               color: kMainColor, size: 30))
                     ],
                   ),
-                )
+                ),
+                FutureBuilder(
+                    future: CloudDatabase.isTheOwner(store.id!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        bool isTheOwner = snapshot.data as bool;
+
+                        return isTheOwner
+                            ? Container(
+                                margin: EdgeInsets.only(
+                                    top: screenHeight * .22,
+                                    left: screenWidth * 0.5),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () async {
+                                          //Todo: add branches screen here
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddBranchScreen(
+                                                      storeData: null,
+                                                      isNew: false,
+                                                      store: store),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.add_location_alt,
+                                          color: kMainColor,
+                                          size: 30,
+                                        )),
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ComputationPointsScreen(
+                                                      store: store,
+                                                    )),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                            Icons.point_of_sale_outlined,
+                                            color: kMainColor,
+                                            size: 30)),
+                                  ],
+                                ),
+                              )
+                            : SizedBox();
+                      } else {
+                        print(snapshot.error);
+                        return const SizedBox();
+                      }
+                    })
               ],
             ),
             // Store Name and Description

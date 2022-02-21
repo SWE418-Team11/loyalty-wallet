@@ -35,6 +35,14 @@ class Store {
         map['storeBanner'] as String,
       );
 
+  void addBranch(Map<String, String> data) {
+    locations.add({
+      'branchBanner': data['branchBanner'],
+      'location': data['location'],
+      'description': data['description'],
+    });
+  }
+
   String get description => _description;
 
   String get storeBanner => _storeBanner;

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loyalty_wallet/business_owner/add_branch_screen.dart';
 import 'package:loyalty_wallet/business_owner/buisness_owner_store_screen.dart';
+import 'package:loyalty_wallet/business_owner/create_store.dart';
+import 'package:loyalty_wallet/business_owner/scoial_media_links_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
 
 import '../models/user_data.dart';
@@ -78,13 +81,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? ProfileButton(
                     function: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  BusinessOwnerStoreScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BusinessOwnerStoreScreen(),
+                        ),
+                      );
                     },
                     text: 'Stores')
                 : SizedBox(),
+            user.businessOwner
+                ? ProfileButton(
+                    function: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateStore(),
+                        ),
+                      );
+                    },
+                    text: 'Create Store')
+                : SizedBox(),
+
             ProfileButton(
               text: 'Point History',
               function: () {},

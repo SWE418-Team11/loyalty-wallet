@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:loyalty_wallet/widgets/stores_grid.dart';
 
+import '../customer/search_screen.dart';
+
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({Key? key}) : super(key: key);
 
@@ -23,34 +25,28 @@ class _ExploreScreenState extends State<ExploreScreen> {
             children: [
               Expanded(
                 child: TextButton.icon(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchScreen(),
+                      ),
+                    );
+                  }),
                   icon: const Icon(Icons.search),
                   label: const Text("Search"),
                 ),
               ),
-              Expanded(
-                child: TextButton.icon(
-                  onPressed: (() {}),
-                  icon: const Icon(Icons.filter_list),
-                  label: const Text("Filter"),
-                ),
-              ),
+              // Expanded(
+              //   child: TextButton.icon(
+              //     onPressed: (() {}),
+              //     icon: const Icon(Icons.filter_list),
+              //     label: const Text("Filter"),
+              //   ),
+              // ),
             ],
           ),
         ),
-        // Expanded(
-        //   child: GridView.count(
-        //     childAspectRatio: 1.0,
-        //     crossAxisCount: 2,
-        //     crossAxisSpacing: 5,
-        //     mainAxisSpacing: 15,
-        //     shrinkWrap: true,
-        //     physics: const BouncingScrollPhysics(),
-        //     children: List.generate(20, (index) {
-        //       return const Items();
-        //     }),
-        //   ),
-        // ),
         StoresGrid(),
       ],
     );
