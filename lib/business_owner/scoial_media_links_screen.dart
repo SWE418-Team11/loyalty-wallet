@@ -161,7 +161,7 @@ class SocialMediaField extends StatelessWidget {
           children: [
             Text(
               name,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             SizedBox(
               width: size.width / 2,

@@ -10,6 +10,7 @@ import 'package:loyalty_wallet/customer/report_to_admin.dart';
 import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../business_owner/cashier_list.dart';
 import '../models/menu.dart';
 import '../models/store.dart';
 import '../screens/branches_screen.dart';
@@ -124,7 +125,8 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                           )),
                       IconButton(
                           onPressed: () {
-                            //Todo: Active Notification
+                            CloudDatabase.toggleNotification(
+                                storeID: store.id ?? '');
                           },
                           icon: const Icon(Icons.notifications_active,
                               color: kMainColor, size: 30)),
@@ -135,7 +137,8 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                               'storeID': store.id,
                               'storeName': storeName,
                               'total': 0,
-                              'transactions': []
+                              'transactions': [],
+                              'isNotificationOn': false,
                             }).whenComplete(() {
                               const ScaffoldMessenger(
                                 child: SnackBar(
@@ -182,6 +185,22 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
+                                                  CashierList(store: store),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.person_add_alt_1,
+                                          color: kMainColor,
+                                          size: 30,
+                                        )),
+                                    IconButton(
+                                        onPressed: () async {
+                                          //Todo: add branches screen here
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
                                                   AddBranchScreen(
                                                       storeData: null,
                                                       isNew: false,
@@ -201,7 +220,9 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     ComputationPointsScreen(
+                                                      isNew: false,
                                                       store: store,
+                                                      data: const {}, //this field meant to createing new store
                                                     )),
                                           );
                                         },

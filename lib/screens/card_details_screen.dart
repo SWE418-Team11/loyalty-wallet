@@ -34,6 +34,7 @@ class _CardDetailsState extends State<CardDetails> {
                   id: card.id,
                   name: card.storeName,
                   onTap: () {},
+                  update: () {},
                 ),
                 const SizedBox(
                   height: 25,

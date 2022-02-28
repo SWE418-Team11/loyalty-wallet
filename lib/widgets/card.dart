@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Cards extends StatefulWidget {
@@ -12,6 +13,7 @@ class Cards extends StatefulWidget {
     required this.id,
     required this.name,
     required this.onTap,
+    required this.update,
   }) : super(key: key);
 
   final bool isPressed;
@@ -23,6 +25,7 @@ class Cards extends StatefulWidget {
   final String name;
 
   final VoidCallback onTap;
+  final VoidCallback update;
 
   @override
   State<Cards> createState() => _CardsState();
@@ -30,6 +33,7 @@ class Cards extends StatefulWidget {
 
 class _CardsState extends State<Cards> {
   bool showfront = true;
+  bool delete = false; // to update UI
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +226,7 @@ class _CardsState extends State<Cards> {
           Visibility(
             visible: widget.isPressed,
             child: GestureDetector(
-              onTap: () {},
+              onTap: widget.update,
               child: const Icon(
                 Icons.cancel,
                 color: Colors.red,

@@ -4,6 +4,7 @@ import 'package:loyalty_wallet/screens/explore.dart';
 import 'package:loyalty_wallet/screens/profile.dart';
 import 'package:loyalty_wallet/screens/wallet.dart';
 
+import '../business_owner/choose_plan.dart';
 import '../business_owner/computation_points_screen.dart';
 import '../models/user_data.dart';
 import '../screens/branches_screen.dart';
@@ -20,13 +21,18 @@ class CustomerMainScreen extends StatefulWidget {
 class _CustomerMainScreenState extends State<CustomerMainScreen> {
   int _selectedIndex = 0; // index of current selected screen
   bool isPressed = false; //to show the delete button on the cards
+  void update() {
+    setState(() {
+      isPressed = !isPressed;
+      isPressed = !isPressed;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //Todo: take it out so it doesnt consume data
     List<Widget> _pages = <Widget>[
-      WalletScreen(
-        isPressed: isPressed,
-      ),
+      WalletScreen(isPressed: isPressed, update: update),
       ExploreScreen(),
       ProfileScreen(user: widget.user),
     ];

@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loyalty_wallet/business_owner/computation_points_screen.dart';
 import 'package:loyalty_wallet/models/cloud_batabase.dart';
 
 import '../constants.dart';
 import '../models/store.dart';
+import 'choose_plan.dart';
 
 class AddBranchScreen extends StatefulWidget {
   const AddBranchScreen(
@@ -129,6 +131,7 @@ class _AddBranchScreenState extends State<AddBranchScreen> {
                           });
                         } else {
                           if (isNew) {
+                            // if new, continue to set the points system
                             filled = true;
                             Map<String, dynamic> data = {
                               'name': storeData!['name'],
@@ -146,16 +149,19 @@ class _AddBranchScreenState extends State<AddBranchScreen> {
                               },
                               'locations': [
                                 {
-                                  'branchBanner': _branchBanner?.path,
+                                  'branchBanner': '${_branchBanner?.path}',
                                   'location': _linkController.value.text,
                                   'description':
                                       _descriptionController.value.text,
                                 },
                               ]
                             };
-                            await CloudDatabase.addStore(data);
-                            int count = 0;
-                            Navigator.of(context).popUntil((_) => count++ >= 3);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ComputationPointsScreen(
+                                      store: null, data: data, isNew: true)),
+                            );
                           } else {
                             CloudDatabase.addBranch({
                               'branchBanner': _branchBanner?.path,

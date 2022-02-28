@@ -9,7 +9,9 @@ import 'menu.dart';
 import 'user_data.dart';
 import 'package:uuid/uuid.dart';
 
+// This Class Does All The Functionality In The Cloud
 class CloudDatabase {
+  // Crete New User Account Document
   static Future<UserData> createAccount({
     required String accountType,
     required String firstName,
@@ -37,6 +39,7 @@ class CloudDatabase {
     }
   }
 
+  // Get The User's Document
   static Future<UserData?> getUser({required String id}) async {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
     QuerySnapshot user;
@@ -48,6 +51,7 @@ class CloudDatabase {
     return null;
   }
 
+  // Make The Customer Account A Business Account
   static Future<void> turnAccountToBusiness({required String id}) async {
     await FirebaseFirestore.instance
         .collection('Users')
@@ -55,7 +59,7 @@ class CloudDatabase {
         .update({'isBusinessOwner': true});
   }
 
-  // List<Store>
+  // Get The Stores
   static Future<List<Store>> getStores() async {
     List<Store> stores = [];
     CollectionReference storesRef =
@@ -67,15 +71,19 @@ class CloudDatabase {
         .toList();
   }
 
+  // Get The Menu OF The Store
   static Future<Menu> getMenu({required String id}) async {
     CollectionReference menuRef =
         FirebaseFirestore.instance.collection('Menus');
     QuerySnapshot menu;
 
     menu = await menuRef.where('menuID', isEqualTo: id).get();
-    return Menu.fromJson(menu.docs.first.data());
+    return menu.docs.isNotEmpty
+        ? Menu.fromJson(menu.docs.first.data())
+        : Menu('0', '0', []);
   }
 
+  // Sent The Report To An Admin
   static Future<void> reportToAdmin(
       {required Store store,
       required String reportType,
@@ -91,27 +99,32 @@ class CloudDatabase {
     });
   }
 
-//get owner Stores
+  // Get the stores for a specific business owner
   static Future<List<Store>> getOwnerStores() async {
-    var ownerRef = FirebaseFirestore.instance.collection('Owners');
+    var ownerRef = FirebaseFirestore.instance.collection('Owner');
     var docs = await ownerRef
         .where('ownerID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get();
-    var ownerDoc = docs.docs.first;
+    var ownerDocs = docs.docs;
 
+    List<Store> stores = [];
     var storeRef = FirebaseFirestore.instance.collection('Stores');
-    var sdoct =
-        await storeRef.where('storeID', isEqualTo: ownerDoc['storeID']).get();
-    var queryDocs = sdoct.docs;
-    return queryDocs
-        .map((documentSnapshot) => Store.fromJson(documentSnapshot.data()))
-        .toList();
+    for (var ownerDoc in ownerDocs) {
+      var sdoct =
+          await storeRef.where('id', isEqualTo: ownerDoc['storeID']).get();
+      var queryDocs = sdoct.docs;
+      stores.addAll(queryDocs
+          .map((documentSnapshot) => Store.fromJson(documentSnapshot.data()))
+          .toList());
+    }
+
+    return stores;
   }
 
+  // Check if the current store is belong to the business owner
   static Future<bool> isTheOwner(String storeID) async {
     var ownerRef = FirebaseFirestore.instance.collection('Owner');
     var docs = await ownerRef.where('storeID', isEqualTo: storeID).get();
-    print(docs.docs.first.data());
     if (docs.docs.first.data()['ownerID'] ==
         FirebaseAuth.instance.currentUser?.uid) {
       return true;
@@ -120,10 +133,12 @@ class CloudDatabase {
     }
   }
 
+  // Edit The data of a store // Not USED //
   static Future<void> editStoreData(Map<String, dynamic> data) async {
     FirebaseFirestore.instance.collection('Stores').doc('id').update(data);
   }
 
+  // Add New Store
   static Future<void> addStore(Map<String, dynamic> storeData) async {
     var storesCollection = FirebaseFirestore.instance.collection('Stores');
 
@@ -149,7 +164,9 @@ class CloudDatabase {
           'location': storeData['locations'][0]['location'],
           'description': storeData['locations'][0]['description'],
         }
-      ]
+      ],
+      'RsEqualsTo': storeData['RsEqualsTo'],
+      'plan': storeData['plan'],
     };
 
     DocumentReference docRef = await storesCollection.add(data);
@@ -175,12 +192,15 @@ class CloudDatabase {
           'location': storeData['locations'][0]['location'],
           'description': storeData['locations'][0]['description'],
         }
-      ]
+      ],
+      'RsEqualsTo': storeData['RsEqualsTo'],
+      'plan': storeData['plan'],
     };
 
     await docRef.update(dataEdited);
   }
 
+  // Add New Menu To The New Store
   static Future<String> addNewMenu(String storeID) async {
     var menuCollection = FirebaseFirestore.instance.collection('Menus');
     var docRef = await menuCollection.add({'storeID': storeID, 'products': []});
@@ -189,13 +209,17 @@ class CloudDatabase {
     return docRef.id;
   }
 
+  // Add New Owner When A new Store Is Added
   static Future<void> addNewOwner(String storeID) async {
+    List<String> cashierList = [];
     await FirebaseFirestore.instance.collection('Owner').doc(storeID).set({
       'ownerID': FirebaseAuth.instance.currentUser?.uid,
-      'storeID': storeID
+      'storeID': storeID,
+      'cashierList': cashierList
     });
   }
 
+  // Upload An Image To FireStore
   static Future<String> uploadImage(String filePath) async {
     String extension = filePath.split('.').last;
     String storagePath = '${const Uuid().v4()}.$extension';
@@ -206,6 +230,7 @@ class CloudDatabase {
     return await ref.ref.getDownloadURL();
   }
 
+  // Add New Branch For A Store
   static Future<void> addBranch(Map<String, dynamic> data, Store store) async {
     String branchBanner = await uploadImage(data['branchBanner']!);
     Store cStore = store;
@@ -221,18 +246,21 @@ class CloudDatabase {
         .update(cStore.toJson());
   }
 
+  // Get The User's List Of Cards
   static Future<List<CardData>> getCards() async {
     CollectionReference cardsRef =
         FirebaseFirestore.instance.collection('Cards');
-    QuerySnapshot cardsQuerySnapshot = await cardsRef
+
+    QuerySnapshot<Object?> cardsQuerySnapshot = await cardsRef
         .where('userID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get();
-    List<QueryDocumentSnapshot> cardsQuery = cardsQuerySnapshot.docs;
-    return cardsQuery
-        .map((documentSnapshot) => CardData.fromJson(documentSnapshot.data()))
-        .toList();
+
+    List<QueryDocumentSnapshot<Object?>> cardsQuery = cardsQuerySnapshot.docs;
+
+    return cardsQuery.map((event) => CardData.fromJson(event)).toList();
   }
 
+  // Add New Card For The User
   static Future<void> addCard(Map<String, dynamic> data) async {
     CollectionReference cardsRef =
         FirebaseFirestore.instance.collection('Cards');
@@ -249,12 +277,14 @@ class CloudDatabase {
     }
   }
 
+  // Set Points For Each RS
   static Future<void> setPoints(double value, String storeID) async {
     CollectionReference storesRef =
         FirebaseFirestore.instance.collection('Stores');
     storesRef.doc(storeID).update({'RsEqualsTo': value});
   }
 
+  // Search For A Store By Name
   static Future<List<Store>> search(String suggestion) async {
     CollectionReference storesRef =
         FirebaseFirestore.instance.collection('Stores');
@@ -270,9 +300,135 @@ class CloudDatabase {
     }
 
     List<QueryDocumentSnapshot> queryDocs = query.docs;
-    print(queryDocs.length);
     return queryDocs
         .map((documentSnapshot) => Store.fromJson(documentSnapshot.data()))
         .toList();
+  }
+
+  // Toggle The Notification
+  static Future<bool> toggleNotification({required String storeID}) async {
+    CollectionReference cardsRef =
+        FirebaseFirestore.instance.collection('Cards');
+
+    var card = await cardsRef
+        .where('storeID', isEqualTo: storeID)
+        .where('userID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+
+    if (card.docs.isNotEmpty) {
+      var cardRef = card.docs.first;
+      bool notification = await cardRef.get('isNotificationOn') as bool;
+
+      await cardsRef
+          .doc(cardRef.id)
+          .update({'isNotificationOn': !notification});
+      return true;
+    }
+    return false;
+  }
+
+  // Delete Card from Database
+  static Future<void> deleteCard({required String cardID}) async {
+    await FirebaseFirestore.instance.collection('Cards').doc(cardID).delete();
+  }
+
+  static Future<void> addNewCashier(
+      String cashierPhone, String storeID, List<dynamic> cashlist) async {
+    if (!cashlist.contains(cashierPhone)) {
+      cashlist.add(cashierPhone);
+
+      await FirebaseFirestore.instance
+          .collection('Owner')
+          .doc(storeID)
+          .update({'cashierList': cashlist});
+    }
+  }
+
+  static Future<void> removeCashier(
+      String cashierPhone, String storeID, List<dynamic> cashlist) async {
+    cashlist.remove(cashierPhone);
+    await FirebaseFirestore.instance
+        .collection('Owner')
+        .doc(storeID)
+        .update({'cashierList': cashlist});
+  }
+
+  static Future<void> deleteMenu({required String menuID}) async {
+    CollectionReference menusReference =
+        FirebaseFirestore.instance.collection('Menus');
+
+    Menu menu = await getMenu(id: menuID);
+    for (var product in menu.products) {
+      await deleteImage(url: product['image']);
+    }
+    await menusReference.doc(menuID).delete();
+  }
+
+  static Future<void> deleteImage({required String url}) async {
+    try {
+      await FirebaseStorage.instance.refFromURL(url).delete();
+    } catch (e) {}
+  }
+
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  static Future<void> deleteStoreCards({required String storeID}) async {
+    CollectionReference cardsReference =
+        FirebaseFirestore.instance.collection('Cards');
+
+    QuerySnapshot<Object?> cardsSnapshot =
+        await cardsReference.where('storeID', isEqualTo: storeID).get();
+    for (var card in cardsSnapshot.docs) {
+      await cardsReference.doc(card.id).delete();
+    }
+  }
+
+  static Future<void> deleteOwnership({required String storeID}) async {
+    CollectionReference ownerReference =
+        FirebaseFirestore.instance.collection('Owner');
+    await ownerReference.doc(storeID).delete();
+  }
+
+  static Future<void> deleteAllOwnerStores() async {
+    CollectionReference storesReference =
+        FirebaseFirestore.instance.collection('Stores');
+
+    List<Store> stores = await getOwnerStores();
+    for (Store store in stores) {
+      //delete the menu
+      await deleteMenu(menuID: store.menuID);
+      //delete related images
+      await deleteImage(url: store.storeIcon);
+      await deleteImage(url: store.storeBanner);
+      for (var branch in store.locations) {
+        deleteImage(url: branch['branchBanner']);
+      }
+      await deleteStoreCards(storeID: store.id!);
+      await deleteOwnership(storeID: store.id!);
+      await storesReference.doc(store.id).delete();
+    }
+  }
+
+  static Future<void> deleteUser(UserData user) async {
+    CollectionReference cardsReference =
+        FirebaseFirestore.instance.collection('Cards');
+    CollectionReference usersReference =
+        FirebaseFirestore.instance.collection('Users');
+
+    QuerySnapshot<Object?> cardsSnapshot =
+        await cardsReference.where('userID', isEqualTo: user.id).get();
+    //delete all cards
+    for (var card in cardsSnapshot.docs) {
+      await cardsReference.doc(card.id).delete();
+    }
+
+    //if business Owner delete all stores
+    if (user.businessOwner) {
+      await deleteAllOwnerStores();
+    }
+    await usersReference.doc(FirebaseAuth.instance.currentUser?.uid).delete();
+    await signOut();
   }
 }

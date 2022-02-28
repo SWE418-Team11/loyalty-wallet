@@ -7,6 +7,7 @@ import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/customer/customer_main_screen.dart';
 import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:loyalty_wallet/user/create_account_data_screen.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../models/user_data.dart';
 
@@ -39,6 +40,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   // It will be displayed in a Text widget
   late String _otp;
   final String? userId = FirebaseAuth.instance.currentUser?.uid;
+  bool inAsyncCall = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -48,116 +50,137 @@ class _VerifyScreenState extends State<VerifyScreen> {
         centerTitle: true,
         title: const Text('Confirmation'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: size.height / 6,
-          ),
-          //prompt
-          Text(
-            'Enter The Verification Code',
-            style: Theme.of(context)
-                .textTheme
-                .headline5
-                ?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          // OTP Field Numbers
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OtpInput(_fieldOne, true),
-                const SizedBox(width: 2),
-                OtpInput(_fieldTwo, false),
-                const SizedBox(width: 2),
-                OtpInput(_fieldThree, false),
-                const SizedBox(width: 2),
-                OtpInput(_fieldFour, false),
-                const SizedBox(width: 2),
-                OtpInput(_fieldFive, false),
-                const SizedBox(width: 2),
-                OtpInput(_fieldSix, false),
-              ],
+      body: ModalProgressHUD(
+        dismissible: false,
+        inAsyncCall: inAsyncCall,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: size.height / 6,
             ),
-          ),
-          SizedBox(
-            height: size.height / 3.4,
-          ),
-          // Verify Button
-          SizedBox(
-            height: size.height / 13,
-            width: size.width / 2,
-            child: ElevatedButton(
-              onPressed: () async {
-                _otp = _fieldOne.text +
-                    _fieldTwo.text +
-                    _fieldThree.text +
-                    _fieldFour.text +
-                    _fieldFive.text +
-                    _fieldSix.text;
-
-                PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                    verificationId: widget.verificationID, smsCode: _otp);
-
-                try {
-                  UserCredential uc = await FirebaseAuth.instance
-                      .signInWithCredential(credential);
-
-                  if (FirebaseAuth.instance.currentUser != null) {
-                    //check if user exist
-                    UserData? user = await CloudDatabase.getUser(id: userId!);
-                    if (user == null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateAccountDataScreen(
-                            phoneNumber: widget.phoneNumber,
-                            accountType:
-                                widget.useCase == 'Create Business Account'
-                                    ? 'Business'
-                                    : 'Normal',
-                          ),
-                        ),
-                      );
-                    } else {
-                      if (user.businessOwner == false &&
-                          widget.useCase == 'Create Business Account') {
-                        await CloudDatabase.turnAccountToBusiness(id: userId!);
-                        Navigator.pushReplacementNamed(
-                            context, BusinessOwnerMainScreen.id);
-                      } else {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    CustomerMainScreen(user: user)));
-                      }
-                    }
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Invalid OTP, try again',
-                        style: TextStyle(color: Colors.white)),
-                    backgroundColor: kMainColor,
-                  ));
-                }
-              },
-              child: Text(
-                "Verify",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    ?.copyWith(color: Colors.white),
+            //prompt
+            Text(
+              'Enter The Verification Code',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  ?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            // OTP Field Numbers
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OtpInput(_fieldOne, true),
+                  const SizedBox(width: 2),
+                  OtpInput(_fieldTwo, false),
+                  const SizedBox(width: 2),
+                  OtpInput(_fieldThree, false),
+                  const SizedBox(width: 2),
+                  OtpInput(_fieldFour, false),
+                  const SizedBox(width: 2),
+                  OtpInput(_fieldFive, false),
+                  const SizedBox(width: 2),
+                  OtpInput(_fieldSix, false),
+                ],
               ),
             ),
-          ),
-          //Create an Account
-        ],
+            SizedBox(
+              height: size.height / 3.4,
+            ),
+            // Verify Button
+            SizedBox(
+              height: size.height / 13,
+              width: size.width / 2,
+              child: ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    inAsyncCall = true;
+                  });
+                  _otp = _fieldOne.text +
+                      _fieldTwo.text +
+                      _fieldThree.text +
+                      _fieldFour.text +
+                      _fieldFive.text +
+                      _fieldSix.text;
+
+                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                      verificationId: widget.verificationID, smsCode: _otp);
+
+                  try {
+                    UserCredential uc = await FirebaseAuth.instance
+                        .signInWithCredential(credential);
+
+                    if (FirebaseAuth.instance.currentUser != null) {
+                      //check if user exist
+                      UserData? user = await CloudDatabase.getUser(id: userId!);
+                      if (user == null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateAccountDataScreen(
+                              phoneNumber: widget.phoneNumber,
+                              accountType:
+                                  widget.useCase == 'Create Business Account'
+                                      ? 'Business'
+                                      : 'Normal',
+                            ),
+                          ),
+                        );
+                      } else {
+                        if (user.businessOwner == false &&
+                            widget.useCase == 'Create Business Account') {
+                          await CloudDatabase.turnAccountToBusiness(
+                              id: userId!);
+
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CustomerMainScreen(user: user)));
+                        } else {
+                          setState(() {
+                            inAsyncCall = false;
+                          });
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CustomerMainScreen(user: user)));
+                        }
+                      }
+                    }
+                  } catch (e) {
+                    setState(() {
+                      inAsyncCall = true;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Invalid OTP, try again',
+                          style: TextStyle(color: Colors.white)),
+                      backgroundColor: kMainColor,
+                    ));
+                    setState(() {
+                      inAsyncCall = false;
+                    });
+                  }
+                },
+                child: Text(
+                  "Verify",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      ?.copyWith(color: Colors.white),
+                ),
+              ),
+            ),
+            //Create an Account
+          ],
+        ),
       ),
     );
   }

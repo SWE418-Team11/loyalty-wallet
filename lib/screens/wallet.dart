@@ -6,7 +6,9 @@ import 'card_details_screen.dart';
 import 'package:loyalty_wallet/models/card_data.dart';
 
 class WalletScreen extends StatefulWidget {
-  const WalletScreen({Key? key, required this.isPressed}) : super(key: key);
+  const WalletScreen({Key? key, required this.isPressed, required this.update})
+      : super(key: key);
+  final VoidCallback update;
   final bool isPressed;
   @override
   _WalletScreenState createState() => _WalletScreenState();
@@ -16,6 +18,11 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     bool isPressed = widget.isPressed;
+    void update() {
+      setState(() {});
+      print('object');
+    }
+
     return FutureBuilder(
       future: CloudDatabase.getCards(),
       builder: (context, snapshot) {
@@ -51,12 +58,16 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                     );
                   },
+                  update: () {
+                    setState(() {
+                      CloudDatabase.deleteCard(cardID: card.id);
+                    });
+                  },
                 ),
               );
             },
           );
         } else {
-          print(snapshot.error);
           return const Center(child: CircularProgressIndicator());
         }
       },

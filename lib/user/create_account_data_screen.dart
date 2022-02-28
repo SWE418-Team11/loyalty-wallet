@@ -107,14 +107,14 @@ class _CreateAccountDataScreenState extends State<CreateAccountDataScreen> {
                             firstName: fName.value.text,
                             lastName: lName.value.text,
                             phoneNumber: widget.phoneNumber,
-                          ).whenComplete(() {
-                            if (widget.accountType == 'Business') {
-                              Navigator.pushReplacementNamed(
-                                  context, BusinessOwnerMainScreen.id);
-                            } else {
-                              Navigator.pushReplacementNamed(
-                                  context, CustomerMainScreen.id);
-                            }
+                          ).then((user) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CustomerMainScreen(user: user),
+                              ),
+                            );
                           });
                         }
                       },

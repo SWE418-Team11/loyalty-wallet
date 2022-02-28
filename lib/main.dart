@@ -4,6 +4,7 @@ import 'package:loyalty_wallet/User/create_account.dart';
 import 'package:loyalty_wallet/User/start_screen.dart';
 import 'package:loyalty_wallet/business_owner/business_owner_main_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
+import 'package:loyalty_wallet/customer/customer_main_screen.dart';
 import 'constants.dart';
 
 void main() async {
@@ -27,8 +28,6 @@ class LoyaltyWallet extends StatelessWidget {
       routes: {
         StartScreen.id: (context) => const StartScreen(),
         CreateAccountScreen.id: (context) => const CreateAccountScreen(),
-        BusinessOwnerMainScreen.id: (context) =>
-            const BusinessOwnerMainScreen(),
       },
     );
   }
