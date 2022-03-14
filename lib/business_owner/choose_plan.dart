@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:loyalty_wallet/user/payment_page.dart';
 
 import '../constants.dart';
 import '../models/cloud_batabase.dart';

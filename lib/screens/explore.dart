@@ -37,13 +37,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   label: const Text("Search"),
                 ),
               ),
-              // Expanded(
-              //   child: TextButton.icon(
-              //     onPressed: (() {}),
-              //     icon: const Icon(Icons.filter_list),
-              //     label: const Text("Filter"),
-              //   ),
-              // ),
             ],
           ),
         ),

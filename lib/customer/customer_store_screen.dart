@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/business_owner/add_branch_screen.dart';
+import 'package:loyalty_wallet/business_owner/cancel_plan.dart';
 import 'package:loyalty_wallet/business_owner/computation_points_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/customer/report_to_admin.dart';
@@ -230,6 +231,17 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                                             Icons.point_of_sale_outlined,
                                             color: kMainColor,
                                             size: 30)),
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CancelPlan(store: store)),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.cancel,
+                                            color: kMainColor, size: 30)),
                                   ],
                                 ),
                               )

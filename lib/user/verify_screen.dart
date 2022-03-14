@@ -6,6 +6,7 @@ import 'package:loyalty_wallet/business_owner/business_owner_main_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/customer/customer_main_screen.dart';
 import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import 'package:loyalty_wallet/admin/banned_user_Screen.dart';
 import 'package:loyalty_wallet/user/create_account_data_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -41,6 +42,18 @@ class _VerifyScreenState extends State<VerifyScreen> {
   late String _otp;
   final String? userId = FirebaseAuth.instance.currentUser?.uid;
   bool inAsyncCall = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _fieldOne.dispose();
+    _fieldTwo.dispose();
+    _fieldThree.dispose();
+    _fieldFour.dispose();
+    _fieldFive.dispose();
+    _fieldSix.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -147,11 +160,20 @@ class _VerifyScreenState extends State<VerifyScreen> {
                           setState(() {
                             inAsyncCall = false;
                           });
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CustomerMainScreen(user: user)));
+
+                          if (!user.band) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomerMainScreen(user: user)));
+                          } else {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const BannedScreen()));
+                          }
                         }
                       }
                     }

@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:loyalty_wallet/models/card_data.dart';
+import 'package:loyalty_wallet/models/report_data.dart';
 import 'package:loyalty_wallet/models/store.dart';
 import 'menu.dart';
 import 'user_data.dart';
@@ -430,5 +432,138 @@ class CloudDatabase {
     }
     await usersReference.doc(FirebaseAuth.instance.currentUser?.uid).delete();
     await signOut();
+  }
+
+  static Future<double> getPointWeight(String? storeID) async {
+    DocumentReference storeRef =
+        FirebaseFirestore.instance.collection('Stores').doc(storeID);
+
+    DocumentSnapshot<Object?> storeSnapshot = await storeRef.get();
+
+    double pointweight = Store.fromJson(storeSnapshot).rsEqualsTo;
+    //store class needs to be modified to get RsEqualsto field
+
+    return pointweight;
+  }
+
+  static Future<CardData> getCardPoints(String? cardID) async {
+    DocumentReference cardRef =
+        FirebaseFirestore.instance.collection('Cards').doc(cardID);
+
+    DocumentSnapshot<Object?> cardSnapshot = await cardRef.get();
+    CardData card = CardData.fromJson(cardSnapshot);
+
+    return card;
+  }
+
+  static Future<void> setCardPoints(
+      String? cardID, double points, List<dynamic> transactions) async {
+    DocumentReference cardRef =
+        FirebaseFirestore.instance.collection('Cards').doc(cardID);
+    cardRef.update({'total': points, 'transactions': transactions});
+  }
+
+  static Future<String> isCashier() async {
+    CollectionReference ownerReference =
+        FirebaseFirestore.instance.collection('Owner');
+    String? number = FirebaseAuth.instance.currentUser?.phoneNumber;
+    number = number?.substring(4);
+    number = '0$number';
+
+    QuerySnapshot<Object?> cashiers =
+        await ownerReference.where('cashierList', arrayContains: number).get();
+    QuerySnapshot<Object?> owners = await ownerReference
+        .where('ownerID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+
+    dynamic data;
+    if (cashiers.size > 0) {
+      data = cashiers.docs.first.data() as Map<String, dynamic>;
+      return data['storeID'];
+    }
+    if (owners.size > 0) {
+      data = owners.docs.first.data() as Map<String, dynamic>;
+      return data['storeID'];
+    }
+
+    return 'empty';
+  }
+
+  static Future<void> changePlanOfStore(
+      {required String plan, required String id}) async {
+    CollectionReference stores =
+        FirebaseFirestore.instance.collection('Stores');
+    await stores.doc(id).update({'plan': plan});
+  }
+
+  static Future<List<ReportData>> getReports() async {
+    //create class reportdata to map it
+    CollectionReference reportsRef =
+        FirebaseFirestore.instance.collection('Reports');
+
+    QuerySnapshot<Object?> reportsQuerySnapshot = await reportsRef.get();
+    //status is not included in the reports, it should be available
+    // to determine the reports that have not be given a response yet
+    //the report must include report title, and report id too which is not available in firebase
+    var queryDocs = reportsQuerySnapshot.docs;
+
+    return queryDocs
+        .map((documentSnapshot) =>
+            ReportData.fromJson(documentSnapshot.data(), documentSnapshot.id))
+        .toList();
+  }
+
+  static Future<void> bannerRequest(
+      Map<String, dynamic> rentBanner, String UID) async {
+    rentBanner['isActive'] = true;
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(UID)
+        .update({'rentBanner': rentBanner});
+  }
+
+  static Future<void> banUser(String phoneNumber) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
+    QuerySnapshot usersSnapShot;
+
+    usersSnapShot = await users
+        .where('phoneNumber', isEqualTo: '+966${phoneNumber.substring(1)}')
+        .get();
+    if (usersSnapShot.size > 0) {
+      UserData userID = UserData.fromJson(
+          usersSnapShot.docs.first.data() as Map<String, Object?>);
+      DocumentReference bandRef =
+          FirebaseFirestore.instance.collection('Users').doc(userID.id);
+      bandRef.update({'isBand': true});
+    }
+  }
+
+  static Future<void> unBanUser(String phoneNumber) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
+    QuerySnapshot usersSnapShot;
+
+    usersSnapShot =
+        await users.where('phoneNumber', isEqualTo: phoneNumber).get();
+    if (usersSnapShot.size > 0) {
+      UserData userID = UserData.fromJson(
+          usersSnapShot.docs.first.data() as Map<String, Object?>);
+      DocumentReference bandRef =
+          FirebaseFirestore.instance.collection('Users').doc(userID.id);
+      bandRef.update({'isBand': false});
+    }
+  }
+
+  static Future<List<UserData>> getBanedUsers() async {
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+    QuerySnapshot usersSnapShot =
+        await users.where('isBand', isEqualTo: true).get();
+
+    var docs = usersSnapShot.docs;
+
+    return docs
+        .map((e) => UserData.fromJson(e.data() as Map<String, Object?>))
+        .toList();
   }
 }

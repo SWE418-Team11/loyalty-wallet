@@ -21,26 +21,28 @@ class _ItemsState extends State<Items> {
     String storeName = store.name;
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CustomerStoreScreen(
-              store: store,
+        if (store.plan != 'canceled') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomerStoreScreen(
+                store: store,
+              ),
             ),
-          ),
-        );
+          );
+        }
       },
       child: Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
+        decoration: BoxDecoration(
+          boxShadow: const [
             BoxShadow(
               blurRadius: 3,
               color: Colors.black12,
               offset: Offset(0.5, 1),
             )
           ],
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: store.plan != 'canceled' ? Colors.white : Colors.grey,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: Stack(
           fit: StackFit.loose,

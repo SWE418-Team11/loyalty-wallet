@@ -87,7 +87,7 @@ class _AddCashierState extends State<AddCashier> {
                             _cashierController.value.text, storeID!, cashList)
                         .whenComplete(() {
                       int count = 0;
-                      Navigator.of(context).popUntil((route) => count++ >= 3);
+                      Navigator.of(context).popUntil((route) => count++ >= 2);
                     });
                   },
                 )

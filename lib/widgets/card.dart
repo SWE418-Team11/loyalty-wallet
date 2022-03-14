@@ -212,9 +212,7 @@ class _CardsState extends State<Cards> {
                               width: 25,
                             ),
                             QrImage(
-                              data: widget.id,
-                              // embeddedImage: AssetImage('images/LC0.png'),
-                              //this image is shown in the middle of the qr code
+                              data: 'id=${widget.id}',
                             ),
                           ],
                         ),

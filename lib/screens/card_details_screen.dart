@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/models/card_data.dart';
 import '../widgets/card.dart';
@@ -51,6 +52,9 @@ class _CardDetailsState extends State<CardDetails> {
                     itemCount: card.transactions.length,
                     itemBuilder: (BuildContext context, int index) {
                       var transaction = card.transactions[index];
+                      Timestamp stamp = transaction['date'];
+                      DateTime date = stamp.toDate();
+                      print(date);
                       return Column(
                         children: [
                           Row(
@@ -64,7 +68,7 @@ class _CardDetailsState extends State<CardDetails> {
                                         : Colors.green),
                               ),
                               Text(
-                                transaction['date'].toString(),
+                                '${date.day}/${date.month}/${date.year}',
                                 style: TextStyle(
                                     color: transaction['state'] == 'remove'
                                         ? Colors.red
