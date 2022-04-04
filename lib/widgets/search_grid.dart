@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/constants.dart';
 
-import '../models/cloud_batabase.dart';
+import '../database_models/cloud_batabase.dart';
 import '../models/store.dart';
 import 'items.dart';
 

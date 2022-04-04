@@ -1,17 +1,19 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loyalty_wallet/admin/admin_report_screen.dart';
 import 'package:loyalty_wallet/business_owner/add_branch_screen.dart';
 import 'package:loyalty_wallet/business_owner/cancel_plan.dart';
 import 'package:loyalty_wallet/business_owner/computation_points_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/customer/report_to_admin.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../business_owner/cashier_list.dart';
+import '../business_owner/customers_screen.dart';
+import '../database_models/buisness_owner_database.dart';
 import '../models/menu.dart';
 import '../models/store.dart';
 import '../screens/branches_screen.dart';
@@ -112,6 +114,7 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => BranchesScreen(
+                                  store: store,
                                   locations: locations,
                                 ),
                               ),
@@ -157,6 +160,7 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ReportToAdmin(
                                   store: store,
+                                  bo: false,
                                 ),
                               ),
                             );
@@ -167,7 +171,7 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                   ),
                 ),
                 FutureBuilder(
-                    future: CloudDatabase.isTheOwner(store.id!),
+                    future: BusinessOwnerDatabase.isTheOwner(store.id!),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         bool isTheOwner = snapshot.data as bool;
@@ -175,8 +179,8 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                         return isTheOwner
                             ? Container(
                                 margin: EdgeInsets.only(
-                                    top: screenHeight * .22,
-                                    left: screenWidth * 0.5),
+                                    top: screenHeight * .24,
+                                    left: screenWidth * 0.265),
                                 child: Row(
                                   children: [
                                     IconButton(
@@ -242,12 +246,40 @@ class _CustomerStoreScreenState extends State<CustomerStoreScreen> {
                                         },
                                         icon: const Icon(Icons.cancel,
                                             color: kMainColor, size: 30)),
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MyCostumersScreen(
+                                                      store: store,
+                                                    )),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                            Icons.supervisor_account_sharp,
+                                            color: kMainColor,
+                                            size: 30)),
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReportToAdmin(
+                                                      store: store,
+                                                      bo: true,
+                                                    )),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.report_problem,
+                                            color: kMainColor, size: 30)),
                                   ],
                                 ),
                               )
-                            : SizedBox();
+                            : const SizedBox();
                       } else {
-                        print(snapshot.error);
                         return const SizedBox();
                       }
                     })
@@ -402,12 +434,12 @@ class ProductsGrid extends StatelessWidget {
                   Flexible(
                     child: Text(
                       products[index]['productName'],
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                   Text(
                     products[index]['price'].toString(),
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   )
                 ],
               ),
@@ -416,7 +448,7 @@ class ProductsGrid extends StatelessWidget {
                 border: Border.all(
                   color: kMainColor,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(8))),
+                borderRadius: const BorderRadius.all(Radius.circular(8))),
           );
         });
   }

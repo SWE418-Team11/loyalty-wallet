@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 import 'package:loyalty_wallet/widgets/card.dart';
 
 import 'card_details_screen.dart';
@@ -18,10 +18,6 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     bool isPressed = widget.isPressed;
-    void update() {
-      setState(() {});
-      print('object');
-    }
 
     return FutureBuilder(
       future: CloudDatabase.getCards(),
@@ -68,6 +64,7 @@ class _WalletScreenState extends State<WalletScreen> {
             },
           );
         } else {
+          print(snapshot.error);
           return const Center(child: CircularProgressIndicator());
         }
       },

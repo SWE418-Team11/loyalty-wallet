@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:loyalty_wallet/widgets/stores_grid.dart';
 
 import '../customer/search_screen.dart';
@@ -29,7 +28,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SearchScreen(),
+                        builder: (context) => const SearchScreen(),
                       ),
                     );
                   }),
@@ -40,7 +39,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ],
           ),
         ),
-        StoresGrid(),
+        const StoresGrid(),
       ],
     );
   }

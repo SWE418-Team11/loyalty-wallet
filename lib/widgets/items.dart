@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/customer/customer_store_screen.dart';
 import 'package:loyalty_wallet/models/store.dart';
 

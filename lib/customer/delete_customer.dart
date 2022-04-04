@@ -3,6 +3,7 @@ import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../User/start_screen.dart';
 import '../models/user_data.dart';
+import 'package:loyalty_wallet/models/store.dart';
 
 class DeleteAccount extends StatefulWidget {
   const DeleteAccount({Key? key, required this.user}) : super(key: key);
@@ -70,7 +71,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id iaculis neque. Nam blandit placerat porta. Suspendisse a nulla feugiat, lobortis libero id, ultrices nulla. In blandit mauris ac dui pretium ultricies.',
+                      'you are about to start the process of deleting your Loyalty Wallet account. all your information and points in your account will no longer be exist. you can restore your account if you login into the app in the next 30 days.',
                       style: TextStyle(
                         fontSize: 17.0,
                       ),
@@ -85,7 +86,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id iaculis neque. Nam blandit placerat porta. Suspendisse a nulla feugiat, lobortis libero id, ultrices nulla. In blandit mauris ac dui pretium ultricies',
+                      'some account information may still be visible to the admins and the stores owners. \nafter your account is deleted, you can recreate another account with the same phone number.',
                       style: TextStyle(
                         fontSize: 17.0,
                       ),

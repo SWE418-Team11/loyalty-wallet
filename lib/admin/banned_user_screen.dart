@@ -9,8 +9,8 @@ class BannedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar:
-            AppBar(title: Text('Banned'), centerTitle: true, primary: false),
+        appBar: AppBar(
+            title: const Text('Banned'), centerTitle: true, primary: false),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

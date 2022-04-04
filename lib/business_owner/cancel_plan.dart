@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import '../database_models/buisness_owner_database.dart';
 import '../models/store.dart';
 
 class CancelPlan extends StatefulWidget {
@@ -12,7 +12,7 @@ class CancelPlan extends StatefulWidget {
 }
 
 class _CancelPlan extends State<CancelPlan> {
-  TextEditingController _cancelationReason = TextEditingController();
+  final TextEditingController _cancelationReason = TextEditingController();
   bool value = false;
   bool inAsyncCall = false;
   @override
@@ -108,7 +108,7 @@ class _CancelPlan extends State<CancelPlan> {
                           setState(() {
                             inAsyncCall = true;
                           });
-                          await CloudDatabase.changePlanOfStore(
+                          await BusinessOwnerDatabase.changePlanOfStore(
                               id: store.id!, plan: 'canceled');
                         }
                         setState(() {

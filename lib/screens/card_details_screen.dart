@@ -54,7 +54,6 @@ class _CardDetailsState extends State<CardDetails> {
                       var transaction = card.transactions[index];
                       Timestamp stamp = transaction['date'];
                       DateTime date = stamp.toDate();
-                      print(date);
                       return Column(
                         children: [
                           Row(

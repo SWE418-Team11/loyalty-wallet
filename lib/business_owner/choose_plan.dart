@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:loyalty_wallet/user/payment_page.dart';
 
 import '../constants.dart';
-import '../models/cloud_batabase.dart';
+import '../database_models/buisness_owner_database.dart';
 
 class ChoosePlan extends StatefulWidget {
   const ChoosePlan({required this.data, Key? key}) : super(key: key);
@@ -51,7 +50,7 @@ class _ChoosePlanState extends State<ChoosePlan> {
       'plan': plan
     };
 
-    await CloudDatabase.addStore(data);
+    await BusinessOwnerDatabase.addStore(data);
     setState(() {
       inAsyncCall = false;
     });

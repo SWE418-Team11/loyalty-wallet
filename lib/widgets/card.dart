@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Cards extends StatefulWidget {

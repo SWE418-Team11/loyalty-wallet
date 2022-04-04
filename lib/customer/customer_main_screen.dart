@@ -4,10 +4,7 @@ import 'package:loyalty_wallet/screens/explore.dart';
 import 'package:loyalty_wallet/screens/profile.dart';
 import 'package:loyalty_wallet/screens/wallet.dart';
 
-import '../business_owner/choose_plan.dart';
-import '../business_owner/computation_points_screen.dart';
 import '../models/user_data.dart';
-import '../screens/branches_screen.dart';
 
 class CustomerMainScreen extends StatefulWidget {
   const CustomerMainScreen({required this.user, Key? key}) : super(key: key);
@@ -33,7 +30,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
     //Todo: take it out so it doesnt consume data
     List<Widget> _pages = <Widget>[
       WalletScreen(isPressed: isPressed, update: update),
-      ExploreScreen(),
+      const ExploreScreen(),
       ProfileScreen(user: widget.user),
     ];
     return SafeArea(

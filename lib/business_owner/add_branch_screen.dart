@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loyalty_wallet/business_owner/computation_points_screen.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
 
 import '../constants.dart';
+import '../database_models/buisness_owner_database.dart';
 import '../models/store.dart';
-import 'choose_plan.dart';
 
 class AddBranchScreen extends StatefulWidget {
   const AddBranchScreen(
@@ -62,7 +61,7 @@ class _AddBranchScreenState extends State<AddBranchScreen> {
                       choseBanner();
                     },
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      borderRadius: const BorderRadius.all(Radius.circular(5)),
                       child: Container(
                         width: size.width,
                         height: size.height / 4,
@@ -163,7 +162,7 @@ class _AddBranchScreenState extends State<AddBranchScreen> {
                                       store: null, data: data, isNew: true)),
                             );
                           } else {
-                            CloudDatabase.addBranch({
+                            BusinessOwnerDatabase.addBranch({
                               'branchBanner': _branchBanner?.path,
                               'location': _linkController.value.text,
                               'description': _descriptionController.value.text,

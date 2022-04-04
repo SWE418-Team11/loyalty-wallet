@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/business_owner/choose_plan.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
 
+import '../database_models/buisness_owner_database.dart';
 import '../models/store.dart';
 
 class ComputationPointsScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class ComputationPointsScreen extends StatefulWidget {
 }
 
 class _ComputationPointsScreenState extends State<ComputationPointsScreen> {
-  TextEditingController _point = TextEditingController();
+  final TextEditingController _point = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,8 @@ class _ComputationPointsScreenState extends State<ComputationPointsScreen> {
                           builder: (context) => ChoosePlan(data: data)),
                     );
                   } else {
-                    CloudDatabase.setPoints(double.parse(_point.value.text),
+                    BusinessOwnerDatabase.setPoints(
+                            double.parse(_point.value.text),
                             widget.store?.id ?? '')
                         .whenComplete(() => Navigator.pop(context));
                   }

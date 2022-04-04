@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/constants.dart';
 
-import '../widgets/search_Grid.dart';
+import '../widgets/search_grid.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -18,11 +18,11 @@ class _SearchScreenState extends State<SearchScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Search'),
+          title: const Text('Search'),
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               SizedBox(

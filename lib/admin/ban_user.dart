@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import '../database_models/admin_database.dart';
 
 class BanUser extends StatelessWidget {
   const BanUser({
@@ -48,7 +47,7 @@ class BanUser extends StatelessWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Padding(
@@ -120,7 +119,7 @@ class BanUser extends StatelessWidget {
                                     ),
                                     child: const Text('Ban'),
                                     onPressed: () {
-                                      CloudDatabase.banUser(_phoneNumber);
+                                      AdminDatabase.banUser(_phoneNumber);
                                       Navigator.pop(dialogcontext);
                                       Navigator.pop(context);
                                       doneAlert(context);

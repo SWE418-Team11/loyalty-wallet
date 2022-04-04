@@ -4,14 +4,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loyalty_wallet/business_owner/computation_points_screen.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 import 'package:loyalty_wallet/user/payment_page.dart';
 import '../constants.dart';
+import '../database_models/buisness_owner_database.dart';
 
 class RentBanner extends StatefulWidget {
   const RentBanner({Key? key}) : super(key: key);
@@ -21,7 +19,6 @@ class RentBanner extends StatefulWidget {
 }
 
 class _RentBannerState extends State<RentBanner> {
-  @override
   final ImagePicker _picker = ImagePicker();
   XFile? _rentBanner;
 
@@ -32,6 +29,7 @@ class _RentBannerState extends State<RentBanner> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     AlertDialog alert = AlertDialog(
       title: Text("Request Submitted Sucessfully"),
@@ -68,7 +66,6 @@ class _RentBannerState extends State<RentBanner> {
                 Map<String, dynamic> data =
                     snapshot.data!.data() as Map<String, dynamic>;
                 Map<String, dynamic> rentBanner = data['rentBanner'];
-                print(rentBanner);
                 return SingleChildScrollView(
                   child: Column(
                     children: [
@@ -147,8 +144,8 @@ class _RentBannerState extends State<RentBanner> {
                                   _rentPlan['planDuration'];
                               rentBanner['price'] = _rentPlan['price'];
                               rentBanner['banner'] = '${_rentBanner?.path}';
-                              print("rentBanner : $rentBanner");
-                              await CloudDatabase.bannerRequest(rentBanner, uid)
+                              await BusinessOwnerDatabase.bannerRequest(
+                                      rentBanner, uid)
                                   .whenComplete(() {
                                 Navigator.push(
                                     context,
@@ -183,9 +180,8 @@ class _RentBannerState extends State<RentBanner> {
                                   _rentPlan['planDuration'];
                               rentBanner['price'] = _rentPlan['price'];
                               rentBanner['banner'] = '${_rentBanner?.path}';
-                              print("rentBanner : $rentBanner");
-
-                              await CloudDatabase.bannerRequest(rentBanner, uid)
+                              await BusinessOwnerDatabase.bannerRequest(
+                                      rentBanner, uid)
                                   .whenComplete(() {
                                 Navigator.push(
                                     context,
@@ -220,9 +216,9 @@ class _RentBannerState extends State<RentBanner> {
                                   _rentPlan['planDuration'];
                               rentBanner['price'] = _rentPlan['price'];
                               rentBanner['banner'] = '${_rentBanner?.path}';
-                              print("rentBanner : $rentBanner");
 
-                              await CloudDatabase.bannerRequest(rentBanner, uid)
+                              await BusinessOwnerDatabase.bannerRequest(
+                                      rentBanner, uid)
                                   .whenComplete(() {
                                 Navigator.push(
                                     context,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 import 'package:loyalty_wallet/constants.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../database_models/cahsier_database.dart';
 import '../models/card_data.dart';
 
 class TransactionScreen extends StatefulWidget {
@@ -169,7 +170,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         'state': widget.operation == 'add' ? 'add' : 'remove',
                         'date': DateTime.now()
                       });
-                      await CloudDatabase.setCardPoints(
+                      await CashierDatabase.setCardPoints(
                               cardID, points, card.transactions)
                           .whenComplete(() {
                         successDialog(context)
@@ -243,7 +244,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                           CardData card =
                               await CloudDatabase.getCardPoints(cardID);
                           String cashierStoreID =
-                              await CloudDatabase.isCashier();
+                              await CashierDatabase.isCashier();
                           if (cashierStoreID != card.storeID) {
                             Navigator.pop(context);
                           }
@@ -251,7 +252,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
                           storeID = card.storeID;
                           points = card.total;
                           storeComputation =
-                              await CloudDatabase.getPointWeight(card.storeID);
+                              await CashierDatabase.getPointWeight(
+                                  card.storeID);
                           setState(() {
                             inAsyncCall = false;
                           });

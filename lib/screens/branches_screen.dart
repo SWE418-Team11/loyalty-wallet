@@ -1,15 +1,15 @@
-import 'dart:io';
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:loyalty_wallet/database_models/buisness_owner_database.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../constants.dart';
+import '../models/store.dart';
 
 class BranchesScreen extends StatefulWidget {
-  const BranchesScreen({Key? key, required this.locations}) : super(key: key);
+  const BranchesScreen({Key? key, required this.locations, required this.store})
+      : super(key: key);
   final List<dynamic> locations;
+  final Store store;
   @override
   _BranchesScreenState createState() => _BranchesScreenState();
 }
@@ -47,69 +47,149 @@ class _BranchesScreenState extends State<BranchesScreen> {
     //   }
     // ];
 
+    Future doneAlert(BuildContext context) async {
+      return showDialog(
+          context: context,
+          builder: (BuildContext dialogcontext) {
+            return AlertDialog(
+              content: const Text(
+                'The Store Is Deleted Successfully',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22.0,
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.greenAccent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(dialogcontext);
+                  },
+                  child: const Text('DONE'),
+                ),
+              ],
+            );
+          });
+    }
+
     return SafeArea(
       child: Scaffold(
-          //Todo: improve the performance whenever go back
-          appBar: AppBar(
-            centerTitle: true,
-            title: const Text("Branches"),
-            backgroundColor: kMainColor,
-          ),
-          body: ListView.builder(
-              itemCount: locations.length,
-              itemBuilder: (context, int index) {
-                return InkWell(
-                  child: Container(
-                    //padding: EdgeInsets.all(10),
+        //Todo: improve the performance whenever go back
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Branches"),
+          backgroundColor: kMainColor,
+        ),
+        body: ListView.builder(
+          itemCount: locations.length,
+          itemBuilder: (context, int index) {
+            return InkWell(
+              child: Container(
+                //padding: EdgeInsets.all(10),
 
-                    // height: size.height / 4.33,
-                    width: size.width - 20,
-                    margin: const EdgeInsets.all(10),
+                // height: size.height / 4.33,
+                width: size.width - 20,
+                margin: const EdgeInsets.all(10),
 
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.transparent,
-                        border: Border.all(color: Colors.white, width: 0)),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 130,
-                          width: size.width - 20,
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                      locations[index]['branchBanner']),
-                                  fit: BoxFit.fill)),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: size.width / 1.5,
-                              child: Text(
-                                locations[index]['description'],
-                                style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            const ImageIcon(
-                              AssetImage('images/google Maps.png'),
-                              color: kOrangeColor,
-                              size: 35,
-                            ),
-                          ],
-                        )
-                      ],
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                    border: Border.all(color: Colors.white, width: 0)),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 130,
+                      width: size.width - 20,
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  locations[index]['branchBanner']),
+                              fit: BoxFit.fill)),
                     ),
-                  ),
-                  onTap: () async {
-                    await launch(locations[index]['location'],
-                        forceSafariVC: true, forceWebView: true);
-                  },
-                );
-              })),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: size.width / 1.5,
+                          child: Text(
+                            locations[index]['description'],
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const ImageIcon(
+                          AssetImage('images/google Maps.png'),
+                          color: kOrangeColor,
+                          size: 35,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              onTap: () async {
+                await launch(locations[index]['location'],
+                    forceSafariVC: true, forceWebView: true);
+              },
+              onLongPress: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext dialogcontext) {
+                      return AlertDialog(
+                        content: const Text(
+                          'are you sure you want to delete this Branch Location?',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.0,
+                          ),
+                        ),
+                        actions: [
+                          Row(
+                            children: [
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  primary: Colors.redAccent,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                ),
+                                child: const Text('DELETE'),
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                  await BusinessOwnerDatabase.deleteBranch(
+                                      index, widget.store);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  primary: Colors.grey,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(dialogcontext);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          )
+                        ],
+                      );
+                    });
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

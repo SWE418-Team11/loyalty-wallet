@@ -1,15 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loyalty_wallet/User/start_screen.dart';
-import 'package:loyalty_wallet/business_owner/business_owner_main_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/customer/customer_main_screen.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
-import 'package:loyalty_wallet/admin/banned_user_Screen.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
+import 'package:loyalty_wallet/admin/banned_user_screen.dart';
 import 'package:loyalty_wallet/user/create_account_data_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../database_models/buisness_owner_database.dart';
 import '../models/user_data.dart';
 
 class VerifyScreen extends StatefulWidget {
@@ -148,7 +147,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       } else {
                         if (user.businessOwner == false &&
                             widget.useCase == 'Create Business Account') {
-                          await CloudDatabase.turnAccountToBusiness(
+                          await BusinessOwnerDatabase.turnAccountToBusiness(
                               id: userId!);
 
                           Navigator.pushReplacement(

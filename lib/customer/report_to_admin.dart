@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 
 import '../models/store.dart';
 
 class ReportToAdmin extends StatefulWidget {
-  const ReportToAdmin({required this.store, Key? key}) : super(key: key);
+  const ReportToAdmin({required this.store, Key? key, required this.bo})
+      : super(key: key);
   final Store store;
+  final bool bo;
 
   @override
   _ReportToAdminState createState() => _ReportToAdminState();
 }
 
-var reportTypes = ['type1', 'type2', 'type3'];
-String reportTypeV = reportTypes.first;
-
 class _ReportToAdminState extends State<ReportToAdmin> {
-  TextEditingController _reportContent = TextEditingController();
+  var reportTypes = ['type1', 'type2', 'type3'];
+  var boReportTypes = ['BO type1', 'BO type2', 'BO type3'];
+  late String reportTypeV;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.bo) {
+      reportTypes = boReportTypes;
+    }
+    reportTypeV = reportTypes.first;
+  }
+
+  final TextEditingController _reportContent = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Store store = widget.store;
@@ -57,7 +69,7 @@ class _ReportToAdminState extends State<ReportToAdmin> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Text(
                         store.name,
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                     const SizedBox(height: 10),

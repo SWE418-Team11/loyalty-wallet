@@ -1,13 +1,7 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/business_owner/cashier_edit.dart';
 import 'package:loyalty_wallet/constants.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
-import 'package:loyalty_wallet/business_owner/cashier_edit.dart';
 import '../models/store.dart';
 
 class CashierList extends StatefulWidget {
@@ -28,7 +22,7 @@ class _CashierListState extends State<CashierList> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: kMainColor,
-          title: Text("Cashier List"),
+          title: const Text("Cashier List"),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
@@ -50,7 +44,7 @@ class _CashierListState extends State<CashierList> {
                 )),
           ],
         ),
-        body: Container(
+        body: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Center(
             child: FutureBuilder<DocumentSnapshot>(
@@ -58,11 +52,11 @@ class _CashierListState extends State<CashierList> {
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
+                  return const Text("Loading");
                 }
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> cashlist =

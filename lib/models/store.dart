@@ -59,6 +59,11 @@ class Store {
     });
   }
 
+  List<dynamic> deleteBranch(index) {
+    _locations.removeAt(index);
+    return _locations;
+  }
+
   String get description => _description;
 
   String get storeBanner => _storeBanner;

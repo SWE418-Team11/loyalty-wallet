@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:loyalty_wallet/admin/report_view.dart';
 import 'package:loyalty_wallet/constants.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import 'package:loyalty_wallet/models/report_data.dart';
+
+import '../database_models/admin_database.dart';
+import 'admin_report_screen.dart';
 
 class ReportListScreen extends StatefulWidget {
   const ReportListScreen({Key? key}) : super(key: key);
@@ -32,7 +35,7 @@ class _ReportListScreenState extends State<ReportListScreen> {
             ),
             Expanded(
               child: FutureBuilder(
-                future: CloudDatabase.getReports(),
+                future: AdminDatabase.getReports(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     List<ReportData> reports =
@@ -46,13 +49,41 @@ class _ReportListScreenState extends State<ReportListScreen> {
                       },
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            AdminDatabase.updateReportStatus(
+                                id: reports[index].reportID);
+                            //Todo:here
                             //go to report details
+                            Map<String, dynamic> reportDetails = {
+                              'reportContent': reports[index].reportContent,
+                              'reportType': reports[index].reportType,
+                              'storeName': reports[index].storeName,
+                              'userID': reports[index].userID
+                            };
+                            String reportID = reports[index].reportID;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Report(
+                                  report: reportDetails,
+                                  index: index,
+                                  reportID: reportID,
+                                ),
+                              ),
+                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) =>
+                            //           ReportView(report: reports[index])),
+                            // );
                           },
                           child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: reports[index].viewed
+                                  ? Colors.grey[300]
+                                  : Colors.grey[100],
                               boxShadow: const [
                                 BoxShadow(
                                   blurRadius: 2,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/business_owner/business_owner_main_screen.dart';
 import 'package:loyalty_wallet/customer/customer_main_screen.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 
 import '../constants.dart';
 
@@ -20,7 +19,7 @@ class CreateAccountDataScreen extends StatefulWidget {
 class _CreateAccountDataScreenState extends State<CreateAccountDataScreen> {
   TextEditingController fName = TextEditingController();
   TextEditingController lName = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

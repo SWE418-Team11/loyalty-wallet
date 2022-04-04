@@ -1,15 +1,6 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'dart:math';
-import 'dart:ui';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/business_owner/cashier_add.dart';
 import 'package:loyalty_wallet/constants.dart';
-import 'package:loyalty_wallet/customer/report_to_admin.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
+import '../database_models/buisness_owner_database.dart';
 import '../models/store.dart';
 
 class RemoveCashier extends StatefulWidget {
@@ -22,9 +13,8 @@ class RemoveCashier extends StatefulWidget {
 }
 
 class _RemoveCashierState extends State<RemoveCashier> {
-  @override
   String? cashierNO = "";
-
+  @override
   Widget build(BuildContext context) {
     Store store = widget.store;
     String? storeID = store.id;
@@ -34,28 +24,28 @@ class _RemoveCashierState extends State<RemoveCashier> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Remove Cashier"),
+          title: const Text("Remove Cashier"),
           centerTitle: true,
         ),
         body: Center(
           child: Container(
-            padding: EdgeInsets.only(top: 70),
+            padding: const EdgeInsets.only(top: 70),
             child: Column(
               children: [
-                Text(
+                const Text(
                   "Select Cashier Number to Remove",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 50),
-                  padding: EdgeInsets.only(left: 25, right: 25),
+                  margin: const EdgeInsets.only(top: 50),
+                  padding: const EdgeInsets.only(left: 25, right: 25),
                   child: DropdownButtonFormField<dynamic>(
-                    hint: Text("Select Number"),
+                    hint: const Text("Select Number"),
                     value: valueChoice,
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(width: 1))),
+                            borderSide: const BorderSide(width: 1))),
                     items: cashList.map((valueItem) {
                       return DropdownMenuItem(
                         child: Text(valueItem),
@@ -64,19 +54,19 @@ class _RemoveCashierState extends State<RemoveCashier> {
                     }).toList(),
                     onChanged: (newValue) {
                       setState(() => valueChoice = newValue);
-                      this.cashierNO = newValue;
+                      cashierNO = newValue;
                     },
                   ),
                 ),
                 InkWell(
                   child: Container(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     height: 65,
                     width: 250,
                     decoration: BoxDecoration(
                         color: kOrangeColor,
                         borderRadius: BorderRadius.circular(10)),
-                    child: Center(
+                    child: const Center(
                         child: Text("Remove Cashier",
                             style: TextStyle(
                                 color: Colors.white,
@@ -85,7 +75,7 @@ class _RemoveCashierState extends State<RemoveCashier> {
                   ),
                   onTap: () async {
                     if (cashierNO!.isEmpty) return;
-                    await CloudDatabase.removeCashier(
+                    await BusinessOwnerDatabase.removeCashier(
                             cashierNO!, storeID!, cashList)
                         .whenComplete(() {
                       int count = 0;

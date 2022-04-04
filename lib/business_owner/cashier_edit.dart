@@ -1,16 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/business_owner/cashier_add.dart';
 import 'package:loyalty_wallet/constants.dart';
-import 'package:loyalty_wallet/models/cloud_batabase.dart';
 import '../models/store.dart';
-import 'package:loyalty_wallet/business_owner/cashier_add.dart';
 import 'package:loyalty_wallet/business_owner/cashier_remove.dart';
 
 class EditCashier extends StatefulWidget {

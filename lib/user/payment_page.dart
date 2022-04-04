@@ -1,6 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-// ignore: prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/constants.dart';
 
@@ -12,27 +9,28 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
-  @override
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _cardController = TextEditingController();
   final TextEditingController _expireController = TextEditingController();
   final TextEditingController _cvvController = TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
     String type = widget.type;
     AlertDialog alert = AlertDialog(
-      title: Text("Payment Submitted Sucessfully"),
-      content: Text("Your Request is in Pending until Confirmation"),
+      title: const Text("Payment Submitted Sucessfully"),
+      content: const Text("Your Request is in Pending until Confirmation"),
       actions: [
         TextButton(
             onPressed: () {
               int count = 0;
-              if (type == "Rent Banner")
+              if (type == "Rent Banner") {
                 Navigator.of(context).popUntil((route) => count++ >= 3);
-              else if (type == "New Store")
+              } else if (type == "New Store") {
                 Navigator.of(context).popUntil((route) => count++ >= 7);
+              }
             },
-            child: Text("Return"))
+            child: const Text("Return"))
       ],
       elevation: 10,
     );
@@ -41,7 +39,7 @@ class _PaymentState extends State<Payment> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("${type} Payment "),
+        title: Text("$type Payment "),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -50,8 +48,7 @@ class _PaymentState extends State<Payment> {
           decoration: BoxDecoration(
             color: Colors.teal.shade100,
             borderRadius: BorderRadius.circular(10),
-            // ignore: prefer_const_literals_to_create_immutables
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
                 blurRadius: 1, // soften the shadow
@@ -70,7 +67,7 @@ class _PaymentState extends State<Payment> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   top: 15,
                 ),
                 child: Text(
@@ -82,30 +79,30 @@ class _PaymentState extends State<Payment> {
                 ),
               ),
               Container(
-                margin:
-                    EdgeInsets.only(top: 10, right: 15, left: 15, bottom: 5),
+                margin: const EdgeInsets.only(
+                    top: 10, right: 15, left: 15, bottom: 5),
                 child: TextFormField(
                     maxLength: 30,
                     controller: _nameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Full Name',
                       hintText: 'e.g. John Doe',
                       border: OutlineInputBorder(),
                     ),
-                    style: TextStyle(fontSize: 15)),
+                    style: const TextStyle(fontSize: 15)),
               ),
               Container(
-                margin: EdgeInsets.only(right: 15, left: 15, bottom: 5),
+                margin: const EdgeInsets.only(right: 15, left: 15, bottom: 5),
                 child: TextFormField(
                   maxLength: 16,
                   keyboardType: TextInputType.number,
                   controller: _cardController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Card Number ',
                     hintText: 'e.g. xxxx xxxx xxxx xxxx',
                     border: OutlineInputBorder(),
                   ),
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                 ),
               ),
               Center(
@@ -114,27 +111,28 @@ class _PaymentState extends State<Payment> {
                     Container(
                       width: 100,
                       height: 70,
-                      margin: EdgeInsets.only(top: 5, left: 15),
+                      margin: const EdgeInsets.only(top: 5, left: 15),
                       child: TextFormField(
                           maxLength: 5,
                           onChanged: (value) {
-                            if (value.length == 2)
+                            if (value.length == 2) {
                               _expireController.text += "/";
+                            }
                           },
                           keyboardType: TextInputType.number,
                           controller: _expireController,
                           maxLines: 1,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Expiry Date',
                             hintText: 'mm/yy',
                             border: OutlineInputBorder(),
                           ),
-                          style: TextStyle(fontSize: 15)),
+                          style: const TextStyle(fontSize: 15)),
                     ),
                     Container(
                       width: 65,
                       height: 70,
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                         top: 5,
                         left: 15,
                       ),
@@ -143,12 +141,12 @@ class _PaymentState extends State<Payment> {
                           keyboardType: TextInputType.number,
                           controller: _cvvController,
                           maxLines: 1,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'CVV',
                             hintText: 'xxx',
                             border: OutlineInputBorder(),
                           ),
-                          style: TextStyle(fontSize: 15)),
+                          style: const TextStyle(fontSize: 15)),
                     ),
                   ],
                 ),
@@ -158,11 +156,11 @@ class _PaymentState extends State<Payment> {
                 child: Container(
                   height: 55,
                   width: 200,
-                  margin: EdgeInsets.only(top: 25),
+                  margin: const EdgeInsets.only(top: 25),
                   decoration: BoxDecoration(
                     color: kMainColor,
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.blueGrey,
                         blurRadius: 1, // soften the shadow
@@ -174,7 +172,7 @@ class _PaymentState extends State<Payment> {
                       )
                     ],
                   ),
-                  child: Center(
+                  child: const Center(
                       child: Text(
                     "Submit",
                     style: TextStyle(
@@ -191,7 +189,7 @@ class _PaymentState extends State<Payment> {
                       });
                 },
               )),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
         ),

@@ -2,9 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/User/create_account.dart';
 import 'package:loyalty_wallet/User/start_screen.dart';
-import 'package:loyalty_wallet/business_owner/business_owner_main_screen.dart';
 import 'package:loyalty_wallet/constants.dart';
-import 'package:loyalty_wallet/customer/customer_main_screen.dart';
 import 'constants.dart';
 
 void main() async {

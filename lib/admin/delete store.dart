@@ -1,16 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:loyalty_wallet/models/user_data.dart';
+import 'package:loyalty_wallet/database_models/buisness_owner_database.dart';
+import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
+import 'package:loyalty_wallet/models/store.dart';
 
-import '../database_models/admin_database.dart';
+import '../database_models/cloud_batabase.dart';
 
-class UnBan extends StatefulWidget {
-  const UnBan({Key? key}) : super(key: key);
+class DeleteStoreAccount extends StatefulWidget {
+  const DeleteStoreAccount({Key? key}) : super(key: key);
 
   @override
-  _UnBanState createState() => _UnBanState();
+  _DeleteStoreAccountState createState() => _DeleteStoreAccountState();
 }
 
-class _UnBanState extends State<UnBan> {
+class _DeleteStoreAccountState extends State<DeleteStoreAccount> {
   @override
   Widget build(BuildContext context) {
     Future doneAlert(BuildContext context) async {
@@ -19,7 +22,7 @@ class _UnBanState extends State<UnBan> {
           builder: (BuildContext dialogcontext) {
             return AlertDialog(
               content: const Text(
-                'the user have been Unbanned',
+                'The Store Is Deleted Successfully',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -48,48 +51,26 @@ class _UnBanState extends State<UnBan> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: const Color(0xff00AF91),
-          title: const Text('Unban Users'),
+          title: const Text('Delete Store'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               const Text(
-                'Banned Users List',
+                'Stores List',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Search',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      )),
-                  TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Filter',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      )),
-                ],
-              ),
-              const SizedBox(height: 20),
               FutureBuilder(
-                future: AdminDatabase.getBanedUsers(),
+                future: CloudDatabase.getStores(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<UserData> users = snapshot.data as List<UserData>;
+                    List<Store> stores = snapshot.data as List<Store>;
                     return ListView.builder(
                         shrinkWrap: true,
                         primary: false,
-                        itemCount: users.length,
+                        itemCount: stores.length,
                         itemBuilder: (context, int index) {
                           return Container(
                             margin: const EdgeInsets.only(top: 5.0),
@@ -105,7 +86,7 @@ class _UnBanState extends State<UnBan> {
                                     builder: (BuildContext dialogcontext) {
                                       return AlertDialog(
                                         content: const Text(
-                                          'are you sure you want to Unban this user?',
+                                          'are you sure you want to delete this user?',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
@@ -123,12 +104,14 @@ class _UnBanState extends State<UnBan> {
                                                       horizontal: 20,
                                                       vertical: 20),
                                                 ),
-                                                child: const Text('Unban'),
+                                                child: const Text('DELETE'),
                                                 onPressed: () {
-                                                  AdminDatabase.unBanUser(
-                                                      users[index].phoneNumber);
-                                                  Navigator.pop(dialogcontext);
-                                                  doneAlert(context);
+                                                  Navigator.pop(context);
+                                                  BusinessOwnerDatabase
+                                                      .deleteSTORE(
+                                                          store: stores[index]);
+
+                                                  Navigator.pop(context);
                                                 },
                                               ),
                                               TextButton(
@@ -159,13 +142,10 @@ class _UnBanState extends State<UnBan> {
                                       MainAxisAlignment.spaceAround,
                                   // ignore: prefer_const_literals_to_create_immutables
                                   children: [
-                                    Text(
-                                        users[index].firstName +
-                                            ' ' +
-                                            users[index].lastName,
-                                        style: const TextStyle(fontSize: 18.0)),
-                                    Text(users[index].phoneNumber.toString(),
-                                        style: const TextStyle(fontSize: 18.0))
+                                    Text(stores[index].name,
+                                        style: TextStyle(fontSize: 18.0)),
+                                    // Text(stores[index].phoneNumber.toString(),
+                                    //     style: TextStyle(fontSize: 18.0))
                                   ],
                                 ),
                               ),
