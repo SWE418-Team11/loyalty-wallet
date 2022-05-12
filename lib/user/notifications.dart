@@ -15,7 +15,7 @@ class _NotificationsState extends State<Notifications> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Notifications'),
+          title: const Text('Notifications'),
           centerTitle: true,
         ),
         body: FutureBuilder(
@@ -29,8 +29,8 @@ class _NotificationsState extends State<Notifications> {
                   itemCount: offers.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.all(30),
-                      padding: EdgeInsets.all(15),
+                      margin: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.all(15),
                       alignment: Alignment.topLeft,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],

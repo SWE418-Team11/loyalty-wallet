@@ -3,7 +3,6 @@ import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../User/start_screen.dart';
 import '../models/user_data.dart';
-import 'package:loyalty_wallet/models/store.dart';
 
 class DeleteAccount extends StatefulWidget {
   const DeleteAccount({Key? key, required this.user}) : super(key: key);

@@ -74,12 +74,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               setState(() {
                                 inAsyncCall = true;
                               });
-                              await CloudDatabase.signOut();
+                              await CloudDatabase.signOut().then((value) =>
+                                  Navigator.pushReplacementNamed(
+                                      context, StartScreen.id));
+
                               setState(() {
                                 inAsyncCall = false;
                               });
-                              Navigator.pushReplacementNamed(
-                                  context, StartScreen.id);
                             },
                           ),
                         ],
@@ -161,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 );
                               },
                               text: 'Make Special Offer')
-                          : SizedBox(),
+                          : const SizedBox(),
                       storeID != 'empty'
                           ? ProfileButton(
                               text: 'Cashier',
@@ -227,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 );
                               },
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       user.admin
                           ? ProfileButton(
                               text: 'UnBan User',

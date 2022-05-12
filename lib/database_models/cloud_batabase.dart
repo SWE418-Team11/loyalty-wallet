@@ -6,7 +6,6 @@ import 'package:loyalty_wallet/models/special_offer_data.dart';
 import 'package:loyalty_wallet/models/store.dart';
 import '../models/menu.dart';
 import '../models/user_data.dart';
-import 'package:loyalty_wallet/admin/admin_report_reply_screen.dart';
 
 // This Class Does All The Functionality In The Cloud
 class CloudDatabase {
@@ -235,13 +234,13 @@ class CloudDatabase {
         .toList();
   }
 
-  static Future<void> sendReply(String reportID, String Report) async {
+  static Future<void> sendReply(String reportID, String report) async {
     CollectionReference reports =
         FirebaseFirestore.instance.collection('Reports');
     await FirebaseFirestore.instance
         .collection('Reports')
         .doc(reportID)
-        .update({'ReplyMessage': Report});
+        .update({'ReplyMessage': report});
   }
 
   static Future<List<SpecialOfferData>> getOffers() async {

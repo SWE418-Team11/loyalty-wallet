@@ -38,20 +38,22 @@ class _TransactionScreenState extends State<TransactionScreen> {
   int length = 0;
   late String appBarText, enterValueText, dialogText, buttonText;
 
-  double compute(double points, double amount, double weight) {
+  Map<String, dynamic> compute(double points, double amount) {
     //in case of adding points, each ryal is equivalent to RsEqualsTo that is
     // set by the store, then the number of points
     // is the price or amount times the weight.
     if (widget.operation == 'add') {
-      points += amount * weight;
+      points += (amount * storeComputation);
     } else {
-      if (points - amount >= 0) {
+      if (points >= amount) {
         points -= amount;
       } else {
-        return points;
+        // if the operation wasnt successful , the done will be false
+        return {'points': points, 'done': false};
       }
     }
-    return points;
+    //if the operation was successful, done will be true
+    return {'points': points, 'done': true};
   }
 
   Future<dynamic> successDialog(BuildContext context) {
@@ -65,7 +67,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               TextButton(
                 child: const Text('Done'),
                 onPressed: () {
-                  Navigator.pop(dialogcontext);
+                  // Navigator.pop(dialogcontext);
                   Navigator.pop(context);
                   //pop from dialog and screen to return to operations screen
                 },
@@ -160,22 +162,26 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (length > 0) {
-                      points = compute(points, amount, 0);
-                      if (points < 0) {
+                      Map<String, dynamic> computeResults =
+                          compute(points, amount);
+                      points = computeResults['points'] as double;
+
+                      if (!computeResults['done']) {
                         failDialog(context,
                             'cannot redeem more than available points.');
+                      } else {
+                        card.transactions.add({
+                          'amount': amount,
+                          'state': widget.operation == 'add' ? 'add' : 'remove',
+                          'date': DateTime.now()
+                        });
+                        await CashierDatabase.setCardPoints(
+                                cardID, points, card.transactions)
+                            .whenComplete(() {
+                          successDialog(context)
+                              .then((value) => Navigator.pop(context));
+                        });
                       }
-                      card.transactions.add({
-                        'amount': amount,
-                        'state': widget.operation == 'add' ? 'add' : 'remove',
-                        'date': DateTime.now()
-                      });
-                      await CashierDatabase.setCardPoints(
-                              cardID, points, card.transactions)
-                          .whenComplete(() {
-                        successDialog(context)
-                            .then((value) => Navigator.pop(context));
-                      });
                     } else {
                       failDialog(context, 'please enter amount first.');
                     }

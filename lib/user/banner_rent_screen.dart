@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 import 'package:loyalty_wallet/user/payment_page.dart';
 import '../constants.dart';
 import '../database_models/buisness_owner_database.dart';

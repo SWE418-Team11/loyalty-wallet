@@ -1,8 +1,4 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/constants.dart';
 import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
@@ -22,7 +18,7 @@ class _BOListState extends State<BOList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Contact Business Owners"),
+        title: const Text("Contact Business Owners"),
         centerTitle: true,
         backgroundColor: kMainColor,
       ),
@@ -93,9 +89,9 @@ class _BOListState extends State<BOList> {
                                       users[index].firstName +
                                           ' ' +
                                           users[index].lastName,
-                                      style: TextStyle(fontSize: 18.0)),
+                                      style: const TextStyle(fontSize: 18.0)),
                                   Text(users[index].phoneNumber.toString(),
-                                      style: TextStyle(fontSize: 18.0))
+                                      style: const TextStyle(fontSize: 18.0))
                                 ],
                               ),
                             ),

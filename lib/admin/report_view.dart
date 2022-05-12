@@ -14,8 +14,8 @@ class ReportView extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Container(
-              margin: EdgeInsets.all(30),
-              padding: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(15),
               alignment: Alignment.topLeft,
               decoration: BoxDecoration(
                 color: report.viewed ? Colors.grey[300] : Colors.grey[200],

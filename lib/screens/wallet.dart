@@ -64,7 +64,6 @@ class _WalletScreenState extends State<WalletScreen> {
             },
           );
         } else {
-          print(snapshot.error);
           return const Center(child: CircularProgressIndicator());
         }
       },

@@ -34,57 +34,60 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
       ProfileScreen(user: widget.user),
     ];
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          title: Text(_selectedIndex == 0
-              ? 'My Wallet'
-              : _selectedIndex == 1
-                  ? 'Explore'
-                  : 'Profile'),
-          centerTitle: true,
-          actions: [
-            _selectedIndex == 0
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        (isPressed == false)
-                            ? isPressed = true
-                            : isPressed = false;
-                      });
-                    },
-                    icon: const Icon(Icons.delete),
-                    color: (isPressed == false) ? Colors.white : Colors.red,
-                  )
-                : const SizedBox(),
-          ],
-        ),
-        body: _pages.elementAt(_selectedIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: kMainColor,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white70,
-          currentIndex: _selectedIndex,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance_wallet_outlined),
-              label: 'Wallet',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.explore_outlined),
-              label: 'Explore',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_outlined),
-              label: 'Profile',
-            ),
-          ],
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            title: Text(_selectedIndex == 0
+                ? 'My Wallet'
+                : _selectedIndex == 1
+                    ? 'Explore'
+                    : 'Profile'),
+            centerTitle: true,
+            actions: [
+              _selectedIndex == 0
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          (isPressed == false)
+                              ? isPressed = true
+                              : isPressed = false;
+                        });
+                      },
+                      icon: const Icon(Icons.delete),
+                      color: (isPressed == false) ? Colors.white : Colors.red,
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+          body: _pages.elementAt(_selectedIndex),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: kMainColor,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white70,
+            currentIndex: _selectedIndex,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_balance_wallet_outlined),
+                label: 'Wallet',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.explore_outlined),
+                label: 'Explore',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.menu_outlined),
+                label: 'Profile',
+              ),
+            ],
+            onTap: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+          ),
         ),
       ),
     );

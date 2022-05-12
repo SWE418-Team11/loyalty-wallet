@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/database_models/buisness_owner_database.dart';
 import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
@@ -143,7 +142,7 @@ class _DeleteStoreAccountState extends State<DeleteStoreAccount> {
                                   // ignore: prefer_const_literals_to_create_immutables
                                   children: [
                                     Text(stores[index].name,
-                                        style: TextStyle(fontSize: 18.0)),
+                                        style: const TextStyle(fontSize: 18.0)),
                                     // Text(stores[index].phoneNumber.toString(),
                                     //     style: TextStyle(fontSize: 18.0))
                                   ],

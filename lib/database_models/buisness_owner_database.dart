@@ -362,7 +362,6 @@ class BusinessOwnerDatabase {
     var branch = store.locations[index];
     await deleteImage(url: branch['branchBanner']);
     List<dynamic> branches = store.deleteBranch(index);
-    print(branches.length);
     await storesRef.doc(store.id).update({'locations': branches});
   }
 }

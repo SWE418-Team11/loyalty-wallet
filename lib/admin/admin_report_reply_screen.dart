@@ -1,13 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:isolate';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_wallet/constants.dart';
-import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
-import 'package:loyalty_wallet/models/report_data.dart';
-import 'package:loyalty_wallet/models/user_data.dart';
 import 'package:loyalty_wallet/database_models/cloud_batabase.dart';
 
 class ReplyToReport extends StatefulWidget {

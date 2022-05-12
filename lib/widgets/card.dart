@@ -179,8 +179,8 @@ class _CardsState extends State<Cards> {
                                     ),
                                     Text(
                                       widget.id,
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 8),
                                     ),
                                   ],
                                 ),
